@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 List <ContainerListModel> containerList= [
@@ -53,13 +54,15 @@ Widget buildContainer(ContainerListModel model,BuildContext context) {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          model.text2,
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFFF7F7F7).withOpacity(0.8)
+        Expanded(
+          child: Text(
+            model.text2,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFFF7F7F7).withOpacity(0.8)
+            ),
           ),
         ),
       ],
