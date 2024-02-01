@@ -11,9 +11,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final String serverKey = '1eca16c1127fcaf8266a3ae56dffb540f5eaac9f-889fe0e508bf0365111cc95114e29263-88061744';
+  final String serverKey =
+      '1eca16c1127fcaf8266a3ae56dffb540f5eaac9f-889fe0e508bf0365111cc95114e29263-88061744';
 
-  Future<void> _login() async {
+  Future<void> login(BuildContext context) async {
     final String apiUrl = 'https://fashionbiz.org/api/auth';
     final String deviceType = 'phone';
 
@@ -35,59 +36,111 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
         final decodedResponse = json.decode(responseBody);
-        //Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
         print(decodedResponse);
 
-        if (decodedResponse['api_status'] == '200') {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
+        if (decodedResponse['api_status'] == 200) {
+          final String accessToken = decodedResponse['access_token'];
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const HomePage()));
         } else {
-          print('Login failed. Additional details: $decodedResponse');
+          final errorMessage = decodedResponse['error_message'] ?? 'Login failed';
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       } else {
         print('Login failed. Status code: ${response.statusCode}');
         print('Response body: ${await response.stream.bytesToString()}');
       }
     } catch (error) {
-      // network or other errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error during login: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
       print('Error during login: $error');
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Center(child: Text('Login Page')),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset("assets/images/home_image.png",
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset(
+            "assets/images/house.jpg",
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/home_image.png",
+                ),
+                const SizedBox(height: 20.0),
+                const Text(
+                  "Username",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400),
+                ),
+                Container(
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(horizontal: 15), // Adjust the padding as needed
+                  decoration: BoxDecoration(
+                    color: Colors.white, // White background color
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextFormField(
+                    cursorColor: Colors.black,
+                    controller: _usernameController,
+                    style: const TextStyle(color: Colors.black), // Black text color
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // White background color
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    style: const TextStyle(color: Colors.black), // Black text color
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+               const  SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () => login(context),
+                  child: const Text('Login'),
+                ),
+              ],
             ),
-            const SizedBox(height: 20.0),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _login,
-              child: Text('Login'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
-

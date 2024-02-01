@@ -26,8 +26,8 @@ class ApiProvider extends ChangeNotifier{
         final decodedResponse = jsonDecode(value.toString());
         debugPrint(decodedResponse);
         if(decodedResponse['api_status'] == '200'){
+          debugPrint('SUCCESS');
           Navigator.push(context, MaterialPageRoute(builder: (_)=> const HomePage()));
-          print('SUCCESS');
           debugPrint(value.toString());
         }
         // debugPrint(value.toString());
