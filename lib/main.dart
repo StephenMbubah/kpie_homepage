@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kpie_homepage/homepage4_ui.dart';
 import 'package:kpie_homepage/login_page.dart';
+import 'package:kpie_homepage/test.dart';
 
 
 void main() {
@@ -13,13 +14,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'HomePage 4',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //   useMaterial3: true,
-      // ),
-      home:  HomePage(),
+      home:  LoginScreen(),
     );
   }
 }
